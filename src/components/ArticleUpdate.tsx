@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import RadioButton from "./RadioButton";
 import { useLocation, NavLink } from "react-router-dom";
 import { getArticle, updateArticle } from "../api/articleBoard";
+import { Editor } from '@toast-ui/react-editor';
 
 const Wrap = styled.div`
     padding: 10px;
@@ -52,6 +53,8 @@ function ArticleUpdate () {
     password: ''
   });
 
+  const editorRef = useRef<Editor>(null);
+
   useEffect(() => {
     requestData();
   }, []);
@@ -73,6 +76,14 @@ function ArticleUpdate () {
     }));
   };
 
+  const handleChangeEditor = () => {
+    const html = editorRef.current?.getInstance().getHTML();
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      contents: html ? html : ''
+    }));
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Perform any additional logic or submit the form
@@ -85,6 +96,7 @@ function ArticleUpdate () {
   const requestData = async () => {
     const response = await getArticle(location.state.id);
     const { id, title, category, contents, thumb } = response;
+    editorRef.current?.getInstance().setHTML(contents);
     setFormValues((prevValues) => ({
         ...prevValues,
         id, title, category, contents, thumb
@@ -94,6 +106,7 @@ function ArticleUpdate () {
 const requestUpdate = async () => {
     const response = await updateArticle(formValues);
     if(response && response.result){
+        alert('수정 완료');
         requestData();
       } else {
         console.error(response);
@@ -118,9 +131,9 @@ const requestUpdate = async () => {
         <Wrap>
             <h3>카테고리</h3>
             <div>
-                <RadioButton name="category" value="tab1" checked={formValues.category === 'tab1'} onChange={handleRadioChange}>Tab1</RadioButton>
-                <RadioButton name="category" value="tab2" checked={formValues.category === 'tab2'} onChange={handleRadioChange}>Tab2</RadioButton>
-                <RadioButton name="category" value="tab3" checked={formValues.category === "tab3"}onChange={handleRadioChange}>Tab3</RadioButton>
+                <RadioButton name="category" value="tab1" checked={formValues.category === 'tab1'} onChange={handleRadioChange}>기도</RadioButton>
+                <RadioButton name="category" value="tab2" checked={formValues.category === 'tab2'} onChange={handleRadioChange}>말씀</RadioButton>
+                <RadioButton name="category" value="tab3" checked={formValues.category === "tab3"} onChange={handleRadioChange}>추천</RadioButton>
             </div>
         </Wrap>
 
@@ -137,14 +150,21 @@ const requestUpdate = async () => {
 
         <Wrap>
             <h3>내용</h3>
-            <textarea
-            id="contents"
-            name="contents"
-            value={formValues.contents}
-            onChange={handleChange}
-            required
-            />
         </Wrap>
+        <Editor
+            ref={editorRef}
+            previewStyle="vertical"
+            height="600px"
+            onChange={handleChangeEditor}
+            toolbarItems={[
+              // 툴바 옵션 설정
+              ['heading', 'bold', 'italic', 'strike'],
+              ['hr', 'quote'],
+              ['ul', 'ol', 'task', 'indent', 'outdent'],
+              ['table', 'image', 'link'],
+              ['code', 'codeblock'],
+            ]}
+          />
 
         <Wrap>
             <h3>비밀번호</h3>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import RadioButton from "./RadioButton";
 import { useNavigate, NavLink } from "react-router-dom";
@@ -118,9 +118,9 @@ const requestInsert = async () => {
         <Wrap>
             <h3>카테고리</h3>
             <div>
-                <RadioButton name="category" value="tab1" checked={formValues.category === "tab1"} onChange={handleRadioChange}>Tab1</RadioButton>
-                <RadioButton name="category" value="tab2" checked={formValues.category === "tab2"}onChange={handleRadioChange}>Tab2</RadioButton>
-                <RadioButton name="category" value="tab3" checked={formValues.category === "tab3"}onChange={handleRadioChange}>Tab3</RadioButton>
+                <RadioButton name="category" value="tab1" checked={formValues.category === "tab1"} onChange={handleRadioChange}>기도</RadioButton>
+                <RadioButton name="category" value="tab2" checked={formValues.category === "tab2"} onChange={handleRadioChange}>말씀</RadioButton>
+                <RadioButton name="category" value="tab3" checked={formValues.category === "tab3"} onChange={handleRadioChange}>추천</RadioButton>
             </div>
         </Wrap>
 
