@@ -6,7 +6,8 @@ type Article = {
     category: string,
     contents: string,
     thumb: string,
-    password: string
+    password: string,
+    open_yn: string
 }
 
 const getArticles = async (searchWord: string) => {

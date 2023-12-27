@@ -39,6 +39,7 @@ type FormValues = {
   category: string;
   thumb: string;
   password: string;
+  open_yn: string;
 }
 
 function ArticleInsert () {
@@ -49,7 +50,8 @@ function ArticleInsert () {
     contents: '',
     category: '',
     thumb: '',
-    password: ''
+    password: '',
+    open_yn: 'Y'
   });  
 
   const editorRef = useRef<Editor>(null);
@@ -64,9 +66,10 @@ function ArticleInsert () {
   };
 
   const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
     setFormValues((prevValues) => ({
       ...prevValues,
-      category: e.target.value,
+      [name]: value,
     }));
   };
 
@@ -153,6 +156,14 @@ const requestInsert = async () => {
             ['code', 'codeblock'],
           ]}
         />
+
+        <Wrap>
+            <h3>게시 여부</h3>
+            <div>
+                <RadioButton name="open_yn" value='Y' checked={formValues.open_yn === 'Y'} onChange={handleRadioChange}>게시</RadioButton>
+                <RadioButton name="open_yn" value='N' checked={formValues.open_yn === 'N'} onChange={handleRadioChange}>숨김</RadioButton>
+            </div>
+        </Wrap>
 
         <Wrap>
             <h3>비밀번호</h3>

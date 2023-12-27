@@ -39,6 +39,7 @@ type FormValues = {
   category: string;
   thumb: string;
   password: string;
+  open_yn: string;
 }
 
 function ArticleUpdate () {
@@ -50,7 +51,8 @@ function ArticleUpdate () {
     contents: '',
     category: '',
     thumb: '',
-    password: ''
+    password: '',
+    open_yn: ''
   });
 
   const editorRef = useRef<Editor>(null);
@@ -70,9 +72,10 @@ function ArticleUpdate () {
   };
 
   const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
     setFormValues((prevValues) => ({
       ...prevValues,
-      category: e.target.value,
+      [name]: value,
     }));
   };
 
@@ -95,11 +98,11 @@ function ArticleUpdate () {
   const location = useLocation();
   const requestData = async () => {
     const response = await getArticle(location.state.id);
-    const { id, title, category, contents, thumb } = response;
+    const { id, title, category, contents, thumb, open_yn } = response;
     editorRef.current?.getInstance().setHTML(contents);
     setFormValues((prevValues) => ({
         ...prevValues,
-        id, title, category, contents, thumb
+        id, title, category, contents, thumb, open_yn
       }));
 };
 
@@ -165,6 +168,14 @@ const requestUpdate = async () => {
               ['code', 'codeblock'],
             ]}
           />
+
+        <Wrap>
+            <h3>게시 여부</h3>
+            <div>
+                <RadioButton name="open_yn" value='Y' checked={formValues.open_yn === 'Y'} onChange={handleRadioChange}>게시</RadioButton>
+                <RadioButton name="open_yn" value='N' checked={formValues.open_yn === 'N'} onChange={handleRadioChange}>숨김</RadioButton>
+            </div>
+        </Wrap>
 
         <Wrap>
             <h3>비밀번호</h3>
